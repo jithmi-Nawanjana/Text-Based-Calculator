@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class TextBasedCalculator {
@@ -6,13 +7,17 @@ public class TextBasedCalculator {
         Scanner scanner = new Scanner(System.in);
 
         double firstNumber = readNumber(scanner, "Enter first number: ");
-        double secondNumber = readNumber(scanner, "Enter second number: ");
         String operationInput = readOperation(scanner);
+        Double secondNumber = null;
+
+        if (requiresSecondOperand(operationInput)) {
+            secondNumber = readNumber(scanner, "Enter second number: ");
+        }
 
         try {
             double result = calculate(firstNumber, secondNumber, operationInput);
-            System.out.println("Result: " + result);
-        } catch (ArithmeticException e) {
+            System.out.println("Result: " + formatResult(result));
+        } catch (IllegalArgumentException | ArithmeticException e) {
             System.out.println(e.getMessage());
         }
 
@@ -33,32 +38,64 @@ public class TextBasedCalculator {
 
     private static String readOperation(Scanner scanner) {
         while (true) {
-            System.out.print("Choose operation (+, -, *, /): ");
-            String operation = scanner.nextLine().trim();
+            System.out.print("Choose operation (+, -, *, /, %, ^, sqrt): ");
+            String operation = scanner.nextLine().trim().toLowerCase();
             if (operation.equals("+") || operation.equals("-")
-                    || operation.equals("*") || operation.equals("/")) {
+                    || operation.equals("*") || operation.equals("/")
+                    || operation.equals("%") || operation.equals("^")
+                    || operation.equals("sqrt")) {
                 return operation;
             }
             System.out.println("Invalid operation selected.");
         }
     }
 
-    private static double calculate(double firstNumber, double secondNumber, String operation) {
+    private static double calculate(double firstNumber, Double secondNumber, String operation) {
         switch (operation) {
             case "+":
-                return firstNumber + secondNumber;
+                return firstNumber + requireSecondNumber(secondNumber);
             case "-":
-                return firstNumber - secondNumber;
+                return firstNumber - requireSecondNumber(secondNumber);
             case "*":
-                return firstNumber * secondNumber;
+                return firstNumber * requireSecondNumber(secondNumber);
             case "/":
-                if (secondNumber == 0) {
+                double divisor = requireSecondNumber(secondNumber);
+                if (divisor == 0) {
                     throw new ArithmeticException("Cannot divide by zero.");
                 }
-                return firstNumber / secondNumber;
+                return firstNumber / divisor;
+            case "%":
+                double modulus = requireSecondNumber(secondNumber);
+                if (modulus == 0) {
+                    throw new ArithmeticException("Cannot perform modulus by zero.");
+                }
+                return firstNumber % modulus;
+            case "^":
+                return Math.pow(firstNumber, requireSecondNumber(secondNumber));
+            case "sqrt":
+                if (firstNumber < 0) {
+                    throw new ArithmeticException("Cannot take the square root of a negative number.");
+                }
+                return Math.sqrt(firstNumber);
             default:
                 throw new IllegalArgumentException("Unsupported operation.");
         }
+    }
+
+    private static boolean requiresSecondOperand(String operation) {
+        return !operation.equals("sqrt");
+    }
+
+    private static double requireSecondNumber(Double secondNumber) {
+        if (secondNumber == null) {
+            throw new IllegalArgumentException("Second number is required for this operation.");
+        }
+        return secondNumber;
+    }
+
+    private static String formatResult(double value) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        return decimalFormat.format(value);
     }
 }
 
