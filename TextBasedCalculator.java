@@ -11,26 +11,34 @@ public class TextBasedCalculator {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        String mode = readMode(scanner);
-
-        if ("expression".equals(mode)) {
-            runExpressionCalculator(scanner);
-        } else {
-            runBasicCalculator(scanner);
-        }
-
+        runMenu(scanner);
         scanner.close();
     }
 
-    private static String readMode(Scanner scanner) {
+    private static void runMenu(Scanner scanner) {
         while (true) {
-            System.out.print("Choose calculator mode (basic/expression): ");
-            String modeInput = scanner.nextLine().trim().toLowerCase();
-            if (modeInput.equals("basic") || modeInput.equals("expression")) {
-                return modeInput;
+            System.out.println("==== Text-Based Calculator ====");
+            System.out.println("1. Basic Calculator");
+            System.out.println("2. Scientific Calculator");
+            System.out.println("3. Exit");
+            System.out.print("Enter option: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    runBasicCalculator(scanner);
+                    break;
+                case "2":
+                    runScientificCalculator(scanner);
+                    break;
+                case "3":
+                    System.out.println("Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid option. Please choose 1, 2, or 3.");
             }
-            System.out.println("Invalid mode selected. Please choose either 'basic' or 'expression'.");
+
+            System.out.println();
         }
     }
 
@@ -51,7 +59,7 @@ public class TextBasedCalculator {
         }
     }
 
-    private static void runExpressionCalculator(Scanner scanner) {
+    private static void runScientificCalculator(Scanner scanner) {
         while (true) {
             System.out.print("Enter full expression: ");
             String expression = scanner.nextLine();
