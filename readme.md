@@ -2,14 +2,15 @@
 
 ## Overview
 
-`TextBasedCalculator` is a simple Java application that allows a user to perform basic arithmetic operations (addition, subtraction, multiplication, and division) via the console. The program demonstrates user input handling and basic control flow in Java.
+`TextBasedCalculator` is a simple Java console application that walks through user input, validation, and arithmetic. It now covers addition, subtraction, multiplication, division, modulus, exponentiation, square roots, and formatted output—highlighting the `Scanner`, control flow, helper methods, and the `Math`/`DecimalFormat` classes.
 
 ## Features
 
-- Prompts the user for two numbers.
-- Supports four basic operations: `+`, `-`, `*`, `/`.
-- Checks for division by zero and invalid operations.
-- Displays the calculation result or error messages accordingly.
+- Prompts for the first number, then requests a second number only when needed.
+- Supports `+`, `-`, `*`, `/`, `%`, `^`, and `sqrt`.
+- Validates numeric input, operations, and division/modulus-by-zero attempts.
+- Handles non-numeric input via `try-catch`.
+- Uses helper methods for input parsing, calculation, and result formatting (rounded to two decimals).
 
 ## How to Run
 
@@ -27,17 +28,21 @@
 ## Example
 
 ```
+Enter first number: 9
+Choose operation (+, -, *, /, %, ^, sqrt): sqrt
+Result: 3
+
 Enter first number: 10
-Enter second number: 2
-Choose operation (+, -, *, /): *
-Result: 20.0
+Choose operation (+, -, *, /, %, ^, sqrt): /
+Enter second number: 3
+Result: 3.33
 ```
 
 ## Notes
 
-- Only the four operations listed above are supported.
-- If an invalid operation is entered, the program will notify the user and exit.
-- Division by zero is handled gracefully with an error message.
+- Operations beyond the listed set are rejected with a helpful message.
+- Division and modulus by zero, negative square roots, and missing operands are prevented.
+- Results are rounded for readability via `DecimalFormat`.
 
 ## License
 
